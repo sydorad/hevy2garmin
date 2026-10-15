@@ -1,0 +1,21 @@
+
+name: Hevy Garmin Sync
+
+on:
+  schedule:
+    - cron: '0 */2 * * *'
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Spustit synchronizaci
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          curl --fail-with-body --show-error --silent \
+            --retry 2 \
+            --max-time 120 \
+            -H "Authorization: Bearer $CRON_SECRET" \
+            "https://hevy2garmin-gray-nine.vercel.app/api/cron/sync"
